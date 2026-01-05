@@ -1,0 +1,32 @@
+# GCP 2-Tier Lab (Terraform)
+
+Terraform configuration for a simple GCP VPC in `us-central1` with separate public and app subnets, and two Ubuntu Compute Engine VMs: a bastion host (external IP) and an app instance (internal IP only).
+
+## Architecture
+
+- Custom VPC (`lab-vpc`) with auto subnet creation disabled.
+- Subnets:
+  - `public-subnet` – `10.10.0.0/24`, hosts the bastion VM with an external IP.
+  - `app-subnet` – `10.10.10.0/24`, hosts the app VM with only an internal IP.
+- Firewall rules:
+  - `allow-ssh-bastion` – allows SSH (22/tcp) from a configurable CIDR to bastion (target tag `bastion`).
+  - `allow-ssh-internal` – allows SSH from the VPC CIDR to app (target tag `app`).
+- Compute Engine instances:
+  - `lab-bastion` – `e2-micro`, Ubuntu 22.04, tagged `bastion`, has external IP.
+  - `lab-app` – `e2-micro`, Ubuntu 22.04, tagged `app`, internal IP only.
+- SSH:
+  - Uses your local public key (e.g. `~/.ssh/id_ed25519.pub`) injected as an `ubuntu` user SSH key.
+
+## Prerequisites
+
+- Terraform CLI installed (v1.6+ recommended).
+- Google Cloud CLI (`gcloud`) installed and on your PATH.
+- A GCP project you can use for labs.
+- A local SSH key pair (for example `~/.ssh/id_ed25519` and `~/.ssh/id_ed25519.pub`).
+
+### GCP and CLI setup
+
+1. Install and verify the Google Cloud CLI:
+
+   ```bash
+   gcloud --version
