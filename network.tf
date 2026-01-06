@@ -28,7 +28,7 @@ resource "google_compute_firewall" "ssh_ingress" {
     ports    = ["22"]
   }
 
-  
+
 
   source_ranges = [var.bastion_allowed_cidr]
   target_tags   = ["bastion"]
